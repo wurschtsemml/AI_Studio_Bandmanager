@@ -266,8 +266,8 @@ export default function Setlist({ profile }: Props) {
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Setlist</h1>
-          <p className="text-gray-500">Verwalte das Repertoire der Band.</p>
+          <h1 className="text-3xl font-bold text-foreground">Setlist</h1>
+          <p className="text-muted-foreground">Verwalte das Repertoire der Band.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="gap-2" onClick={handlePrint}>
@@ -315,7 +315,7 @@ export default function Setlist({ profile }: Props) {
                   <div className="col-span-3 space-y-2">
                     <Input id="file" type="file" onChange={handleFileUpload} disabled={uploading} />
                     {uploading && <p className="text-xs text-primary animate-pulse">Wird hochgeladen...</p>}
-                    {formData.fileUrl && <p className="text-xs text-green-600 truncate">Datei bereit: {formData.fileUrl}</p>}
+                    {formData.fileUrl && <p className="text-xs text-emerald-500 truncate">Datei bereit: {formData.fileUrl}</p>}
                   </div>
                 </div>
                 <div className="grid grid-cols-4 items-start gap-4">
@@ -353,7 +353,7 @@ export default function Setlist({ profile }: Props) {
         <CardHeader className="pb-3">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Suchen nach Titel oder Interpret..." 
                 className="pl-10"
@@ -377,27 +377,27 @@ export default function Setlist({ profile }: Props) {
         <CardContent>
           <div className="rounded-md border overflow-hidden">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead className="w-[250px] cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('title')}>
+                  <TableHead className="w-[250px] cursor-pointer hover:bg-muted transition-colors opacity-80" onClick={() => handleSort('title')}>
                     <div className="flex items-center">
                       Titel / Interpret
                       <SortIcon field="title" />
                     </div>
                   </TableHead>
-                  <TableHead className="text-center cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('status')}>
+                  <TableHead className="text-center cursor-pointer hover:bg-muted transition-colors opacity-80" onClick={() => handleSort('status')}>
                     <div className="flex items-center justify-center">
                       Status
                       <SortIcon field="status" />
                     </div>
                   </TableHead>
-                  <TableHead className="cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('lastPlayed')}>
+                  <TableHead className="cursor-pointer hover:bg-muted transition-colors opacity-80" onClick={() => handleSort('lastPlayed')}>
                     <div className="flex items-center">
                       Zuletzt gespielt
                       <SortIcon field="lastPlayed" />
                     </div>
                   </TableHead>
-                  <TableHead className="text-center cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('playCount')}>
+                  <TableHead className="text-center cursor-pointer hover:bg-muted transition-colors opacity-80" onClick={() => handleSort('playCount')}>
                     <div className="flex items-center justify-center">
                       Gespielt
                       <SortIcon field="playCount" />
@@ -411,7 +411,7 @@ export default function Setlist({ profile }: Props) {
               <TableBody>
                 {filteredSongs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center text-gray-500">
+                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                       Keine Songs gefunden.
                     </TableCell>
                   </TableRow>
@@ -419,27 +419,27 @@ export default function Setlist({ profile }: Props) {
                   filteredSongs.map((song) => (
                     <TableRow key={song.id}>
                       <TableCell>
-                        <div className="font-bold">{song.title}</div>
-                        <div className="text-xs text-gray-500">{song.artist}</div>
+                        <div className="font-bold text-foreground">{song.title}</div>
+                        <div className="text-xs text-muted-foreground">{song.artist}</div>
                       </TableCell>
                       <TableCell className="text-center">
                         <Badge variant="outline" className={`
-                          ${song.status <= 2 ? 'bg-green-50 text-green-700 border-green-200' : 
-                            song.status >= 5 ? 'bg-red-50 text-red-700 border-red-200' : 
-                            'bg-yellow-50 text-yellow-700 border-yellow-200'}
+                          ${song.status <= 2 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 
+                            song.status >= 5 ? 'bg-destructive/10 text-destructive border-destructive/20' : 
+                            'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'}
                         `}>
                           Note {song.status}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="text-xs flex items-center gap-1 text-gray-600">
+                        <div className="text-xs flex items-center gap-1 text-muted-foreground">
                           <CalendarIcon className="h-3 w-3" />
                           {song.lastPlayed ? format(parseISO(song.lastPlayed), 'dd.MM.yyyy') : '-'}
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-2">
-                          <span className="font-mono font-bold">{song.playCount || 0}x</span>
+                          <span className="font-mono font-bold text-foreground">{song.playCount || 0}x</span>
                           <Button 
                             variant="outline" 
                             size="icon" 
@@ -454,34 +454,34 @@ export default function Setlist({ profile }: Props) {
                       <TableCell>
                         <div className="flex gap-2">
                           {song.youtubeLink && (
-                            <a href={song.youtubeLink} target="_blank" rel="noreferrer" className="text-red-600 hover:text-red-700">
+                            <a href={song.youtubeLink} target="_blank" rel="noreferrer" className="text-red-500 hover:text-red-600 transition-colors">
                               <ExternalLink className="h-4 w-4" />
                             </a>
                           )}
                           {song.fileUrl && (
-                            <a href={song.fileUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700">
+                            <a href={song.fileUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-600 transition-colors">
                               <FileAudio className="h-4 w-4" />
                             </a>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="max-w-[200px] truncate text-xs text-gray-600">
+                      <TableCell className="max-w-[200px] truncate text-xs text-muted-foreground">
                         {song.notes || '-'}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground" onClick={() => {
                             setEditingSong(song);
                             setFormData(song);
                             setIsAddOpen(true);
                           }}>
                             <Edit2 className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toggleArchive(song)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground" onClick={() => toggleArchive(song)}>
                             <Archive className="h-3.5 w-3.5" />
                           </Button>
                           {isAdmin && (
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => {
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => {
                               setSongToDelete(song);
                               setIsDeleteOpen(true);
                             }}>

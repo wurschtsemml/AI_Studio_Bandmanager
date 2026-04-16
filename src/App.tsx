@@ -13,10 +13,18 @@ import GigPlanner from './components/GigPlanner';
 import AdminPanel from './components/AdminPanel';
 import RehearsalPlanner from './components/RehearsalPlanner';
 import TodoManager from './components/TodoManager';
+import { useTheme } from './components/ThemeProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { 
   LayoutDashboard, 
   Calendar, 
@@ -28,12 +36,16 @@ import {
   X,
   Settings,
   Lock,
-  ListTodo
+  ListTodo,
+  Sun,
+  Moon,
+  Monitor
 } from 'lucide-react';
 
 type View = 'dashboard' | 'calendar' | 'setlist' | 'gigs' | 'admin' | 'settings' | 'rehearsals' | 'todos';
 
 export default function App() {
+  const { theme, setTheme } = useTheme();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -174,7 +186,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -182,8 +194,8 @@ export default function App() {
 
   if (!profile) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
+        <div className="w-full max-w-md p-8 bg-card rounded-2xl shadow-xl border">
           <div className="text-center mb-8">
             <div className="mb-4 inline-flex items-center justify-center">
               {bandSettings.logoUrl ? (
@@ -194,13 +206,13 @@ export default function App() {
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Music className="h-8 w-8 text-primary" />
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                  <Music className="h-8 w-8" />
                 </div>
               )}
             </div>
-            <h1 className="text-3xl font-bold mb-2">{bandSettings.bandName || 'Band Manager'}</h1>
-            <p className="text-gray-500">Bitte melde dich mit deinen Zugangsdaten an.</p>
+            <h1 className="text-3xl font-bold mb-2 text-foreground">{bandSettings.bandName || 'Band Manager'}</h1>
+            <p className="text-muted-foreground">Bitte melde dich mit deinen Zugangsdaten an.</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-4">
@@ -231,7 +243,7 @@ export default function App() {
             </Button>
           </form>
           
-          <div className="mt-6 text-center text-xs text-gray-400">
+          <div className="mt-6 text-center text-xs text-muted-foreground/50">
             Passwort vergessen? Bitte kontaktiere deinen Band-Admin.
           </div>
         </div>
@@ -298,34 +310,72 @@ export default function App() {
       case 'settings': return (
         <div className="space-y-6">
           <header>
-            <h1 className="text-3xl font-bold text-gray-900">Einstellungen</h1>
-            <p className="text-gray-500">Verwalte dein Profil und dein Passwort.</p>
+            <h1 className="text-3xl font-bold text-foreground">Einstellungen</h1>
+            <p className="text-muted-foreground">Verwalte dein Profil, dein Passwort und das Erscheinungsbild.</p>
           </header>
           
-          <Card className="max-w-md">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-primary" />
-                Passwort ändern
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleChangePassword} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Monitor className="h-5 w-5 text-primary" />
+                  Erscheinungsbild
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="new-password">Neues Passwort</Label>
-                  <Input 
-                    id="new-password" 
-                    type="password" 
-                    placeholder="Mindestens 4 Zeichen" 
-                    value={newPassword || ''}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
-                  />
+                  <Label>Farbschema</Label>
+                  <Select value={theme} onValueChange={(val: any) => setTheme(val)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Thema wählen" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">
+                        <div className="flex items-center gap-2">
+                          <Sun className="h-4 w-4" /> Hell
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="dark">
+                        <div className="flex items-center gap-2">
+                          <Moon className="h-4 w-4" /> Dunkel
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="system">
+                        <div className="flex items-center gap-2">
+                          <Monitor className="h-4 w-4" /> System
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button type="submit">Passwort aktualisieren</Button>
-              </form>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Lock className="h-5 w-5 text-primary" />
+                  Passwort ändern
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">Neues Passwort</Label>
+                    <Input 
+                      id="new-password" 
+                      type="password" 
+                      placeholder="Mindestens 4 Zeichen" 
+                      value={newPassword || ''}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit">Passwort aktualisieren</Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       );
       default: return (
@@ -342,9 +392,9 @@ export default function App() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      <div className="min-h-screen bg-background flex flex-col md:flex-row">
         {/* Mobile Nav */}
-        <div className="md:hidden bg-white border-b p-4 flex items-center justify-between sticky top-0 z-50">
+        <div className="md:hidden bg-card border-b p-4 flex items-center justify-between sticky top-0 z-50">
           <div className="flex items-center gap-2 font-bold text-primary">
             {bandSettings.logoUrl ? (
               <img 
@@ -367,7 +417,7 @@ export default function App() {
 
         {/* Sidebar */}
         <aside className={`
-          fixed inset-0 z-40 bg-white border-r transition-transform md:relative md:translate-x-0
+          fixed inset-0 z-40 bg-card border-r transition-transform md:relative md:translate-x-0
           ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           w-64 flex flex-col
         `}>
@@ -391,7 +441,7 @@ export default function App() {
             {navGroups.map((group) => (
               <div key={group.title || group.id} className="space-y-1">
                 {group.title && (
-                  <h3 className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                  <h3 className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
                     {group.title}
                   </h3>
                 )}
@@ -406,8 +456,8 @@ export default function App() {
                       className={`
                         w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all
                         ${currentView === item.id 
-                          ? 'bg-primary text-white shadow-md' 
-                          : 'text-gray-600 hover:bg-gray-100'}
+                          ? 'bg-primary text-primary-foreground shadow-md' 
+                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'}
                       `}
                     >
                       <item.icon className="h-4.5 w-4.5" />
@@ -423,8 +473,8 @@ export default function App() {
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                       ${currentView === group.id 
-                        ? 'bg-primary text-white shadow-md' 
-                        : 'text-gray-600 hover:bg-gray-100'}
+                        ? 'bg-primary text-primary-foreground shadow-md' 
+                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'}
                     `}
                   >
                     <group.icon className="h-5 w-5" />
@@ -435,19 +485,19 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="p-4 border-t bg-gray-50">
+          <div className="p-4 border-t bg-muted/30">
             <div className="flex items-center gap-3 mb-4 px-2">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
                 {profile?.name?.[0] || 'U'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold truncate">{profile?.name}</p>
-                <p className="text-xs text-gray-500 truncate">{profile?.username}</p>
+                <p className="text-sm font-bold truncate text-foreground">{profile?.name}</p>
+                <p className="text-xs text-muted-foreground truncate">{profile?.username}</p>
               </div>
             </div>
             <Button 
               variant="outline" 
-              className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="w-full justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4" />

@@ -99,9 +99,9 @@ export default function CalendarView({ profile }: Props) {
 
   const getDayColor = (status: AvailabilityStatus) => {
     switch (status) {
-      case 'available': return 'bg-green-500';
-      case 'unavailable': return 'bg-red-500';
-      default: return 'bg-gray-200';
+      case 'available': return 'bg-emerald-500';
+      case 'unavailable': return 'bg-destructive';
+      default: return 'bg-muted';
     }
   };
 
@@ -112,10 +112,10 @@ export default function CalendarView({ profile }: Props) {
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Verfügbarkeit</h1>
-          <p className="text-gray-500">Klicke auf einen Tag, um deinen Status zu ändern. Die Punkte zeigen die Band-Übersicht.</p>
+          <h1 className="text-3xl font-bold text-foreground">Verfügbarkeit</h1>
+          <p className="text-muted-foreground">Klicke auf einen Tag, um deinen Status zu ändern. Die Punkte zeigen die Band-Übersicht.</p>
         </div>
-        <div className="flex items-center gap-2 bg-white p-1 rounded-lg border shadow-sm">
+        <div className="flex items-center gap-2 bg-card p-1 rounded-lg border shadow-sm">
           <Button variant="ghost" size="icon" onClick={prevMonth}><ChevronLeft /></Button>
           <span className="font-bold min-w-[120px] text-center capitalize">
             {format(currentDate, 'MMMM yyyy', { locale: de })}
@@ -128,9 +128,9 @@ export default function CalendarView({ profile }: Props) {
         {/* Calendar Grid */}
         <Card className="overflow-hidden">
           <CardContent className="p-0">
-            <div className="grid grid-cols-7 border-b bg-gray-50">
+            <div className="grid grid-cols-7 border-b bg-muted/50">
               {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(day => (
-                <div key={day} className="py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <div key={day} className="py-3 text-center text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   {day}
                 </div>
               ))}
@@ -157,16 +157,16 @@ export default function CalendarView({ profile }: Props) {
                     onClick={() => toggleStatus(day)}
                     className={`
                       min-h-[120px] border-r border-b p-2 transition-all relative cursor-pointer
-                      ${!isCurrentMonth ? 'bg-gray-50/50 opacity-40' : 'hover:bg-gray-50'}
-                      ${allAvailable ? 'bg-green-100/60 ring-2 ring-inset ring-green-500/20' : 
-                        myStatus === 'available' ? 'bg-green-50/30' : 
-                        myStatus === 'unavailable' ? 'bg-red-50/30' : ''}
+                      ${!isCurrentMonth ? 'bg-muted/30 opacity-40' : 'hover:bg-muted/20'}
+                      ${allAvailable ? 'bg-emerald-500/10 ring-2 ring-inset ring-emerald-500/20' : 
+                        myStatus === 'available' ? 'bg-emerald-500/5' : 
+                        myStatus === 'unavailable' ? 'bg-destructive/5' : ''}
                     `}
                   >
                     <div className="flex justify-between items-start mb-2">
                       <span className={`
                         text-sm font-medium w-7 h-7 flex items-center justify-center rounded-full
-                        ${isToday ? 'bg-primary text-white' : 'text-gray-700'}
+                        ${isToday ? 'bg-primary text-primary-foreground' : 'text-foreground'}
                       `}>
                         {format(day, 'd')}
                       </span>
@@ -177,7 +177,7 @@ export default function CalendarView({ profile }: Props) {
                       {bandStatus.map((s) => (
                         <div key={s.uid} className="flex items-center gap-1.5 group">
                           <div className={`w-2 h-2 rounded-full shrink-0 ${getDayColor(s.status)}`} />
-                          <span className="text-[10px] text-gray-600 truncate leading-none">
+                          <span className="text-[10px] text-muted-foreground truncate leading-none">
                             {s.name.split(' ')[0]} {s.instrument ? `(${s.instrument})` : ''}
                           </span>
                         </div>

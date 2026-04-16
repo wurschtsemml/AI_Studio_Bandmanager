@@ -200,8 +200,8 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
     <div className="space-y-8 pb-12">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Proben-Planer</h1>
-          <p className="text-gray-500">Strukturiere deine Band-Proben und Ziele.</p>
+          <h1 className="text-3xl font-bold text-foreground">Proben-Planer</h1>
+          <p className="text-muted-foreground">Strukturiere deine Band-Proben und Ziele.</p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={(open) => {
           setIsAddOpen(open);
@@ -252,7 +252,7 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
               <div className="space-y-2">
                 <Label htmlFor="location" className="font-bold">Ort / Proberaum</Label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
                     id="location" 
                     placeholder="z.B. Proberaum Hersbruck" 
@@ -267,7 +267,7 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
                 <Label className="text-sm font-bold flex items-center gap-2">
                   <Music className="h-4 w-4 text-primary" /> Songs für diese Probe
                 </Label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto p-3 bg-gray-50 rounded-xl border">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[200px] overflow-y-auto p-3 bg-muted/50 rounded-xl border">
                   {songs.filter(s => !s.isArchived).map(song => (
                     <div 
                       key={song.id}
@@ -275,16 +275,16 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
                       className={`
                         flex items-center gap-2 p-2 rounded-lg cursor-pointer border transition-all
                         ${formData.songIds?.includes(song.id!) 
-                          ? 'bg-white border-primary shadow-sm ring-1 ring-primary/20' 
-                          : 'bg-white/50 border-transparent hover:bg-white hover:border-gray-200'}
+                          ? 'bg-card border-primary shadow-sm ring-1 ring-primary/20' 
+                          : 'bg-card/50 border-transparent hover:bg-card hover:border-border'}
                       `}
                     >
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${formData.songIds?.includes(song.id!) ? 'bg-primary border-primary' : 'bg-white border-gray-300'}`}>
-                        {formData.songIds?.includes(song.id!) && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${formData.songIds?.includes(song.id!) ? 'bg-primary border-primary' : 'bg-card border-border'}`}>
+                        {formData.songIds?.includes(song.id!) && <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full" />}
                       </div>
                       <div className="text-[10px] truncate">
-                        <div className="font-bold text-gray-900">{song.title}</div>
-                        <div className="text-gray-500">{song.artist}</div>
+                        <div className="font-bold text-foreground">{song.title}</div>
+                        <div className="text-muted-foreground">{song.artist}</div>
                       </div>
                     </div>
                   ))}
@@ -306,9 +306,9 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
                 </div>
                 <div className="space-y-2">
                   {formData.todos?.map(todo => (
-                    <div key={todo.id} className="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg group border border-transparent hover:border-gray-200 transition-all">
-                      <span className="text-sm text-gray-700">{todo.task}</span>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeTodo(todo.id)}>
+                    <div key={todo.id} className="flex items-center justify-between p-2.5 bg-muted/50 rounded-lg group border border-transparent hover:border-border transition-all">
+                      <span className="text-sm text-foreground">{todo.task}</span>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeTodo(todo.id)}>
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>
@@ -339,14 +339,14 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
         {/* Upcoming Section */}
         <section className="space-y-6">
           <div className="flex items-center gap-3">
-            <div className="h-px flex-1 bg-gray-200" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">Anstehende Proben</h2>
-            <div className="h-px flex-1 bg-gray-200" />
+            <div className="h-px flex-1 bg-border" />
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Anstehende Proben</h2>
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           {upcoming.length === 0 ? (
-            <Card className="border-dashed bg-gray-50/50">
-              <CardContent className="flex flex-col items-center justify-center py-16 text-gray-500">
+            <Card className="border-dashed bg-muted/30">
+              <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Calendar className="h-12 w-12 mb-4 opacity-10" />
                 <p className="font-medium">Keine anstehenden Proben geplant.</p>
                 <Button variant="link" onClick={() => setIsAddOpen(true)} className="text-primary mt-2">
@@ -400,15 +400,15 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
           <section className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 flex-1">
-                <div className="h-px flex-1 bg-gray-100" />
-                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-300">Vergangene Proben</h2>
-                <div className="h-px flex-1 bg-gray-100" />
+                <div className="h-px flex-1 bg-border/50" />
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/40">Vergangene Proben</h2>
+                <div className="h-px flex-1 bg-border/50" />
               </div>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => setShowPast(!showPast)}
-                className="text-gray-400 text-xs hover:text-gray-600"
+                className="text-muted-foreground/50 text-xs hover:text-muted-foreground"
               >
                 {showPast ? 'Ausblenden' : 'Anzeigen'}
               </Button>
@@ -426,7 +426,7 @@ export default function RehearsalPlanner({ profile, initialDate }: Props) {
                     <Card key={r.id} className="opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-bold text-gray-500">
+                          <span className="text-xs font-bold text-muted-foreground">
                             {format(parseISO(r.date), 'dd.MM.yyyy')}
                           </span>
                           <Badge variant="outline" className="text-[8px] py-0 h-4">Vergangen</Badge>

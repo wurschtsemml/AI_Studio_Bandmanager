@@ -122,10 +122,10 @@ export default function GigPlanner({ profile }: Props) {
 
   const getStatusBadge = (status: GigStatus) => {
     switch (status) {
-      case 'Bestätigt': return <Badge className="bg-green-100 text-green-700 border-green-200 hover:bg-green-100">Bestätigt</Badge>;
-      case 'Abgelehnt': return <Badge className="bg-red-100 text-red-700 border-red-200 hover:bg-red-100">Abgelehnt</Badge>;
-      case 'Beworben': return <Badge className="bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-100">Beworben</Badge>;
-      default: return <Badge variant="outline" className="bg-gray-50 text-gray-600">In Anfrage</Badge>;
+      case 'Bestätigt': return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/20">Bestätigt</Badge>;
+      case 'Abgelehnt': return <Badge className="bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20">Abgelehnt</Badge>;
+      case 'Beworben': return <Badge className="bg-blue-500/10 text-blue-500 border-blue-500/20 hover:bg-blue-500/20">Beworben</Badge>;
+      default: return <Badge variant="outline" className="bg-muted text-muted-foreground">In Anfrage</Badge>;
     }
   };
 
@@ -135,8 +135,8 @@ export default function GigPlanner({ profile }: Props) {
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gig-Planer</h1>
-          <p className="text-gray-500">Übersicht aller potenziellen und festen Auftritte.</p>
+          <h1 className="text-3xl font-bold text-foreground">Gig-Planer</h1>
+          <p className="text-muted-foreground">Übersicht aller potenziellen und festen Auftritte.</p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger render={
@@ -207,7 +207,7 @@ export default function GigPlanner({ profile }: Props) {
         <CardHeader className="pb-3">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Suchen nach Veranstaltung..." 
                 className="pl-10"
@@ -231,7 +231,7 @@ export default function GigPlanner({ profile }: Props) {
         <CardContent>
           <div className="rounded-md border overflow-hidden">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted/50">
                 <TableRow>
                   <TableHead className="w-[200px]">Veranstaltung</TableHead>
                   <TableHead>Datum</TableHead>
@@ -244,7 +244,7 @@ export default function GigPlanner({ profile }: Props) {
               <TableBody>
                 {filteredGigs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center text-gray-500">
+                    <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
                       Keine Gigs gefunden.
                     </TableCell>
                   </TableRow>
@@ -252,14 +252,14 @@ export default function GigPlanner({ profile }: Props) {
                   filteredGigs.map((gig) => (
                     <TableRow key={gig.id}>
                       <TableCell>
-                        <div className="font-bold">{gig.name}</div>
-                        <div className="text-xs text-gray-500 flex items-center gap-1">
+                        <div className="font-bold text-foreground">{gig.name}</div>
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
                           <User className="h-3 w-3" /> {gig.organizer || '-'}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="text-sm flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5 text-gray-400" />
+                        <div className="text-sm flex items-center gap-1 text-foreground">
+                          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                           {gig.date ? new Date(gig.date).toLocaleDateString('de-DE') : 'Offen'}
                         </div>
                       </TableCell>
@@ -269,35 +269,35 @@ export default function GigPlanner({ profile }: Props) {
                       <TableCell>
                         <div className="space-y-1">
                           {gig.phone && (
-                            <div className="text-xs flex items-center gap-1 text-gray-600">
+                            <div className="text-xs flex items-center gap-1 text-muted-foreground">
                               <Phone className="h-3 w-3" /> {gig.phone}
                             </div>
                           )}
                           {gig.email && (
-                            <div className="text-xs flex items-center gap-1 text-gray-600">
+                            <div className="text-xs flex items-center gap-1 text-muted-foreground">
                               <Mail className="h-3 w-3" /> {gig.email}
                             </div>
                           )}
-                          {!gig.phone && !gig.email && <span className="text-xs text-gray-400">-</span>}
+                          {!gig.phone && !gig.email && <span className="text-xs text-muted-foreground/50">-</span>}
                         </div>
                       </TableCell>
-                      <TableCell className="max-w-[150px] truncate text-xs text-gray-600">
+                      <TableCell className="max-w-[150px] truncate text-xs text-muted-foreground">
                         {gig.notes || '-'}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground" onClick={() => {
                             setEditingGig(gig);
                             setFormData(gig);
                             setIsAddOpen(true);
                           }}>
                             <Edit2 className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toggleArchive(gig)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground" onClick={() => toggleArchive(gig)}>
                             <Archive className="h-3.5 w-3.5" />
                           </Button>
                           {isAdmin && (
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => {
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => {
                               setGigToDelete(gig);
                               setIsDeleteOpen(true);
                             }}>

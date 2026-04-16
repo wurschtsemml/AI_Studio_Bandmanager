@@ -85,8 +85,8 @@ export default function Dashboard({ profile, onPlanRehearsal }: Props) {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold text-gray-900">Willkommen zurück, {profile?.name}!</h1>
-        <p className="text-gray-500">Hier ist eine Übersicht über die aktuellen Band-Aktivitäten.</p>
+        <h1 className="text-3xl font-bold text-foreground">Willkommen zurück, {profile?.name}!</h1>
+        <p className="text-muted-foreground">Hier ist eine Übersicht über die aktuellen Band-Aktivitäten.</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,24 +141,24 @@ export default function Dashboard({ profile, onPlanRehearsal }: Props) {
           <CardContent>
             <div className="space-y-4">
               {recentSongs.length === 0 ? (
-                <p className="text-gray-500 text-sm italic">Keine Songs gefunden.</p>
+                <p className="text-muted-foreground text-sm italic">Keine Songs gefunden.</p>
               ) : (
                 recentSongs.map(song => (
-                  <div key={song.id} className="flex flex-col p-3 bg-gray-50 rounded-lg gap-2">
+                  <div key={song.id} className="flex flex-col p-3 bg-muted/50 rounded-lg gap-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-bold text-sm">{song.title}</p>
-                        <p className="text-xs text-gray-500">{song.artist}</p>
+                        <p className="font-bold text-sm text-foreground">{song.title}</p>
+                        <p className="text-xs text-muted-foreground">{song.artist}</p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
-                        <Badge variant="outline" className="bg-white">
+                        <Badge variant="outline" className="bg-card">
                           Note: {song.status}
                         </Badge>
-                        <span className="text-[10px] text-gray-400 font-mono">{song.playCount || 0}x gespielt</span>
+                        <span className="text-[10px] text-muted-foreground/60 font-mono">{song.playCount || 0}x gespielt</span>
                       </div>
                     </div>
                     {song.notes && (
-                      <p className="text-xs text-gray-600 bg-white/50 p-2 rounded border border-gray-100 italic">
+                      <p className="text-xs text-muted-foreground bg-card/50 p-2 rounded border border-border italic">
                         {song.notes}
                       </p>
                     )}
@@ -180,15 +180,15 @@ export default function Dashboard({ profile, onPlanRehearsal }: Props) {
           <CardContent>
             <div className="space-y-4">
               {upcomingGigs.length === 0 ? (
-                <p className="text-gray-500 text-sm italic">Keine bestätigten Gigs.</p>
+                <p className="text-muted-foreground text-sm italic">Keine bestätigten Gigs.</p>
               ) : (
                 upcomingGigs.map(gig => (
-                  <div key={gig.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={gig.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                     <div>
-                      <p className="font-bold text-sm">{gig.name}</p>
-                      <p className="text-xs text-gray-500">{gig.date || 'Datum offen'}</p>
+                      <p className="font-bold text-sm text-foreground">{gig.name}</p>
+                      <p className="text-xs text-muted-foreground">{gig.date || 'Datum offen'}</p>
                     </div>
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-none">
+                    <Badge className="bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border-emerald-500/20">
                       Bestätigt
                     </Badge>
                   </div>

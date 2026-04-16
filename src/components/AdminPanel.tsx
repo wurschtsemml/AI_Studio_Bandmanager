@@ -186,8 +186,8 @@ export default function AdminPanel({ profile }: Props) {
     <div className="space-y-6 pb-12">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin-Bereich</h1>
-          <p className="text-gray-500">Verwalte die Band-Einstellungen und Mitglieder.</p>
+          <h1 className="text-3xl font-bold text-foreground">Admin-Bereich</h1>
+          <p className="text-muted-foreground">Verwalte die Band-Einstellungen und Mitglieder.</p>
         </div>
         
         <div className="flex gap-2">
@@ -270,7 +270,7 @@ export default function AdminPanel({ profile }: Props) {
             <CardContent>
               <div className="rounded-md border overflow-hidden">
                 <Table>
-                  <TableHeader className="bg-gray-50">
+                  <TableHeader className="bg-muted/50">
                     <TableRow>
                       <TableHead>Mitglied</TableHead>
                       <TableHead>Instrument</TableHead>
@@ -287,24 +287,24 @@ export default function AdminPanel({ profile }: Props) {
                               {u.name[0]}
                             </div>
                             <div>
-                              <div className="font-medium flex items-center gap-2">
+                              <div className="font-medium flex items-center gap-2 text-foreground">
                                 {u.name}
                                 {u.uid === profile?.uid && (
                                   <Badge variant="outline" className="text-[10px] py-0 h-4">Du</Badge>
                                 )}
                               </div>
-                              <div className="text-[10px] text-gray-400 flex items-center gap-1">
+                              <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                                 <UserCog className="h-2.5 w-2.5" /> {u.username}
                               </div>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <span className="text-sm">{u.instrument || '-'}</span>
+                          <span className="text-sm text-foreground">{u.instrument || '-'}</span>
                         </TableCell>
                         <TableCell>
                           <Badge className={`
-                            ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-gray-100 text-gray-700 border-gray-200'}
+                            ${u.role === 'admin' ? 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20' : 'bg-muted text-muted-foreground border-border'}
                           `}>
                             {u.role === 'admin' ? (
                               <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Admin</span>
@@ -318,7 +318,7 @@ export default function AdminPanel({ profile }: Props) {
                             <Button 
                               variant="ghost" 
                               size="sm" 
-                              className="gap-1 h-8"
+                              className="gap-1 h-8 text-foreground"
                               onClick={() => {
                                 setEditingUser(u);
                                 setFormData(u);
@@ -331,7 +331,7 @@ export default function AdminPanel({ profile }: Props) {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                               onClick={() => {
                                 console.log('Delete requested for:', u.name, u.uid);
                                 setUserToDelete(u);
@@ -361,7 +361,7 @@ export default function AdminPanel({ profile }: Props) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl bg-gray-50 gap-4">
+              <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl bg-muted/50 gap-4">
                 {bandSettings.logoUrl ? (
                   <div className="relative group">
                     <img 
@@ -377,8 +377,8 @@ export default function AdminPanel({ profile }: Props) {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <ImageIcon className="h-12 w-12 text-gray-300 mx-auto mb-2" />
-                    <p className="text-xs text-gray-500">Kein Logo hochgeladen</p>
+                    <ImageIcon className="h-12 w-12 text-muted-foreground mx-auto mb-2 opacity-50" />
+                    <p className="text-xs text-muted-foreground">Kein Logo hochgeladen</p>
                   </div>
                 )}
                 
@@ -401,7 +401,7 @@ export default function AdminPanel({ profile }: Props) {
                     <Upload className="h-4 w-4" />
                     {isUploadingLogo ? 'Wird gespeichert...' : 'Logo hochladen'}
                   </Button>
-                  <p className="text-[10px] text-gray-400 mt-2 text-center">
+                  <p className="text-[10px] text-muted-foreground mt-2 text-center">
                     Empfohlen: Transparentes PNG, max. 500KB.
                   </p>
                 </div>
@@ -434,15 +434,15 @@ export default function AdminPanel({ profile }: Props) {
             </CardContent>
           </Card>
 
-          <Card className="bg-amber-50 border-amber-200">
+          <Card className="bg-amber-500/10 border-amber-500/20">
             <CardHeader>
-              <CardTitle className="text-amber-800 text-sm flex items-center gap-2">
+              <CardTitle className="text-amber-500 text-sm flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 Sicherheitshinweis
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-xs text-amber-700">
+              <p className="text-xs text-amber-500/80">
                 Admins haben vollen Zugriff auf alle Songs, Gigs und die Benutzerverwaltung. 
                 Änderungen am Logo sind sofort für alle Mitglieder sichtbar.
               </p>
