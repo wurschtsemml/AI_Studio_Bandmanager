@@ -23,8 +23,8 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { UserProfile, Song } from '../types';
-import { Music, Plus, Trash2, Archive, ExternalLink, FileAudio, Search, Edit2, ArrowUpDown, ArrowUp, ArrowDown, Calendar as CalendarIcon } from 'lucide-react';
+import { BandSettings, UserProfile, Song } from '../types';
+import { Music, Plus, Trash2, Archive, ExternalLink, FileAudio, Search, Edit2, ArrowUpDown, ArrowUp, ArrowDown, Calendar as CalendarIcon, Printer } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -45,6 +45,16 @@ export default function Setlist({ profile }: Props) {
   const [uploading, setUploading] = useState(false);
   const [sortField, setSortField] = useState<SortField>('title');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [bandSettings, setBandSettings] = useState<BandSettings>({});
+
+  useEffect(() => {
+    const unsubSettings = onSnapshot(doc(db, 'settings', 'band'), (snapshot) => {
+      if (snapshot.exists()) {
+        setBandSettings(snapshot.data() as BandSettings);
+      }
+    });
+    return () => unsubSettings();
+  }, []);
 
   // Form state
   const [formData, setFormData] = useState<Partial<Song>>({
@@ -149,6 +159,72 @@ export default function Setlist({ profile }: Props) {
     }
   };
 
+  const handlePrint = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const filteredSongs = songs
+      .filter(s => showArchived ? s.isArchived : !s.isArchived)
+      .filter(s => 
+        s.title.toLowerCase().includes(search.toLowerCase()) || 
+        s.artist.toLowerCase().includes(search.toLowerCase())
+      );
+
+    const logoHtml = bandSettings.logoUrl 
+      ? `<img src="${bandSettings.logoUrl}" style="height: 60px; margin-bottom: 20px;">` 
+      : '';
+
+    const tableRows = filteredSongs.map(s => `
+      <tr>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">${s.title}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">${s.artist}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">Note: ${s.status}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">${s.playCount || 0}x</td>
+        <td style="padding: 8px; border-bottom: 1px solid #ddd;">${s.lastPlayed ? format(parseISO(s.lastPlayed), 'dd.MM.yyyy') : '-'}</td>
+      </tr>
+    `).join('');
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Setlist - ${bandSettings.bandName || 'Band Manager'}</title>
+          <style>
+            body { font-family: sans-serif; padding: 40px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th { text-align: left; background: #f4f4f4; padding: 10px; border-bottom: 2px solid #333; }
+            h1 { margin: 0; }
+            .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              ${logoHtml}
+              <h1>Setlist: ${bandSettings.bandName || 'Band Manager'}</h1>
+              <p>Stand: ${format(new Date(), 'dd.MM.yyyy')}</p>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Titel</th>
+                <th>Interpret</th>
+                <th style="text-align: center;">Status</th>
+                <th style="text-align: center;">Gespielt</th>
+                <th>Zuletzt</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tableRows}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -189,9 +265,15 @@ export default function Setlist({ profile }: Props) {
   return (
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Setlist</h1>
-          <p className="text-gray-500">Verwalte das Repertoire der Band.</p>
+        <div className="flex items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Setlist</h1>
+            <p className="text-gray-500">Verwalte das Repertoire der Band.</p>
+          </div>
+          <Button variant="outline" size="sm" className="gap-2" onClick={handlePrint}>
+            <Printer className="h-4 w-4" />
+            Drucken
+          </Button>
         </div>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger render={
