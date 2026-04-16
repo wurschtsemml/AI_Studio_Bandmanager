@@ -31,6 +31,11 @@ export interface Song {
   playCount?: number;
 }
 
+export interface BandSettings {
+  logoUrl?: string;
+  bandName?: string;
+}
+
 export type GigStatus = 'In Anfrage' | 'Beworben' | 'Bestätigt' | 'Abgelehnt';
 
 export interface Gig {

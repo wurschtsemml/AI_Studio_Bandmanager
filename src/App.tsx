@@ -3,7 +3,7 @@ import { db, handleFirestoreError, OperationType } from './firebase';
 import { doc, getDoc, setDoc, onSnapshot, collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
-import { UserProfile, UserRole } from './types';
+import { BandSettings, UserProfile, UserRole } from './types';
 
 // Components
 import Dashboard from './components/Dashboard';
@@ -39,8 +39,15 @@ export default function App() {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [bandSettings, setBandSettings] = useState<BandSettings>({ logoUrl: '', bandName: 'Band Manager' });
 
   useEffect(() => {
+    const unsubSettings = onSnapshot(doc(db, 'settings', 'band'), (snapshot) => {
+      if (snapshot.exists()) {
+        setBandSettings(snapshot.data() as BandSettings);
+      }
+    });
+
     const init = async () => {
       const checkInitialAdmin = async () => {
         try {
@@ -174,10 +181,21 @@ export default function App() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
         <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
           <div className="text-center mb-8">
-            <div className="mb-4 inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full">
-              <Music className="h-8 w-8 text-primary" />
+            <div className="mb-4 inline-flex items-center justify-center">
+              {bandSettings.logoUrl ? (
+                <img 
+                  src={bandSettings.logoUrl} 
+                  alt="Band Logo" 
+                  className="h-24 w-auto object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                  <Music className="h-8 w-8 text-primary" />
+                </div>
+              )}
             </div>
-            <h1 className="text-3xl font-bold mb-2">Band Manager Pro</h1>
+            <h1 className="text-3xl font-bold mb-2">{bandSettings.bandName || 'Band Manager'}</h1>
             <p className="text-gray-500">Bitte melde dich mit deinen Zugangsdaten an.</p>
           </div>
           
@@ -281,8 +299,19 @@ export default function App() {
         {/* Mobile Nav */}
         <div className="md:hidden bg-white border-b p-4 flex items-center justify-between sticky top-0 z-50">
           <div className="flex items-center gap-2 font-bold text-primary">
-            <Music className="h-6 w-6" />
-            <span>Band Manager</span>
+            {bandSettings.logoUrl ? (
+              <img 
+                src={bandSettings.logoUrl} 
+                alt="Band Logo" 
+                className="h-8 w-auto object-contain"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <>
+                <Music className="h-6 w-6" />
+                <span>{bandSettings.bandName || 'Band Manager'}</span>
+              </>
+            )}
           </div>
           <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X /> : <Menu />}
@@ -295,9 +324,20 @@ export default function App() {
           ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           w-64 flex flex-col
         `}>
-          <div className="p-6 hidden md:flex items-center gap-2 font-bold text-2xl text-primary border-b">
-            <Music className="h-8 w-8" />
-            <span>Band Manager</span>
+          <div className="p-6 hidden md:flex items-center justify-center border-b min-h-[100px]">
+            {bandSettings.logoUrl ? (
+              <img 
+                src={bandSettings.logoUrl} 
+                alt="Band Logo" 
+                className="h-16 w-auto object-contain"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="flex items-center gap-2 font-bold text-2xl text-primary">
+                <Music className="h-8 w-8" />
+                <span>{bandSettings.bandName || 'Band Manager'}</span>
+              </div>
+            )}
           </div>
 
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
