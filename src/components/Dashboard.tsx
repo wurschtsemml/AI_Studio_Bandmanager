@@ -136,14 +136,21 @@ export default function Dashboard({ profile }: Props) {
                 <p className="text-gray-500 text-sm italic">Keine Songs gefunden.</p>
               ) : (
                 recentSongs.map(song => (
-                  <div key={song.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-bold text-sm">{song.title}</p>
-                      <p className="text-xs text-gray-500">{song.artist}</p>
+                  <div key={song.id} className="flex flex-col p-3 bg-gray-50 rounded-lg gap-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-bold text-sm">{song.title}</p>
+                        <p className="text-xs text-gray-500">{song.artist}</p>
+                      </div>
+                      <Badge variant="outline" className="bg-white">
+                        Note: {song.status}
+                      </Badge>
                     </div>
-                    <Badge variant="outline" className="bg-white">
-                      Note: {song.status}
-                    </Badge>
+                    {song.notes && (
+                      <p className="text-xs text-gray-600 bg-white/50 p-2 rounded border border-gray-100 italic">
+                        {song.notes}
+                      </p>
+                    )}
                   </div>
                 ))
               )}
