@@ -265,23 +265,22 @@ export default function Setlist({ profile }: Props) {
   return (
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Setlist</h1>
-            <p className="text-gray-500">Verwalte das Repertoire der Band.</p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Setlist</h1>
+          <p className="text-gray-500">Verwalte das Repertoire der Band.</p>
+        </div>
+        <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="gap-2" onClick={handlePrint}>
             <Printer className="h-4 w-4" />
             Drucken
           </Button>
-        </div>
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger render={
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Song hinzufügen
-            </Button>
-          } />
+          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <DialogTrigger render={
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Song hinzufügen
+              </Button>
+            } />
             <DialogContent className="sm:max-w-[500px] max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>{editingSong ? 'Song bearbeiten' : 'Neuen Song hinzufügen'}</DialogTitle>
@@ -346,7 +345,8 @@ export default function Setlist({ profile }: Props) {
               <Button onClick={handleSave}>Speichern</Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        </div>
       </header>
 
       <Card>

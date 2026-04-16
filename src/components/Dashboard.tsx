@@ -11,10 +11,9 @@ import { de } from 'date-fns/locale';
 
 interface Props {
   profile: UserProfile | null;
-  onNavigate: (view: any) => void;
 }
 
-export default function Dashboard({ profile, onNavigate }: Props) {
+export default function Dashboard({ profile }: Props) {
   const [recentSongs, setRecentSongs] = useState<Song[]>([]);
   const [upcomingGigs, setUpcomingGigs] = useState<Gig[]>([]);
   const [possibleRehearsals, setPossibleRehearsals] = useState<string[]>([]);
@@ -88,34 +87,6 @@ export default function Dashboard({ profile, onNavigate }: Props) {
         <h1 className="text-3xl font-bold text-gray-900">Willkommen zurück, {profile?.name}!</h1>
         <p className="text-gray-500">Hier ist eine Übersicht über die aktuellen Band-Aktivitäten.</p>
       </header>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Button 
-          variant="outline" 
-          className="h-auto py-4 flex flex-col gap-2 bg-white hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all"
-          onClick={() => onNavigate('gigs')}
-        >
-          <CalendarPlus className="h-6 w-6" />
-          <div className="text-sm font-bold">Gig planen</div>
-        </Button>
-        <Button 
-          variant="outline" 
-          className="h-auto py-4 flex flex-col gap-2 bg-white hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all"
-          onClick={() => onNavigate('setlist')}
-        >
-          <Music2 className="h-6 w-6" />
-          <div className="text-sm font-bold">Song hinzufügen</div>
-        </Button>
-        <Button 
-          variant="outline" 
-          className="h-auto py-4 flex flex-col gap-2 bg-white hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-all"
-          onClick={() => onNavigate('calendar')}
-        >
-          <CheckCircle2 className="h-6 w-6" />
-          <div className="text-sm font-bold">Verfügbarkeit</div>
-        </Button>
-      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Quick Stats */}

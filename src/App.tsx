@@ -246,14 +246,14 @@ export default function App() {
 
   const renderView = () => {
     switch (currentView) {
-      case 'dashboard': return <Dashboard profile={profile} onNavigate={setCurrentView} />;
+      case 'dashboard': return <Dashboard profile={profile} />;
       case 'calendar': return <CalendarView profile={profile} />;
       case 'setlist': return <Setlist profile={profile} />;
       case 'gigs': return <GigPlanner profile={profile} />;
       case 'admin': 
         if (profile?.role !== 'admin') {
           setCurrentView('dashboard');
-          return <Dashboard profile={profile} onNavigate={setCurrentView} />;
+          return <Dashboard profile={profile} />;
         }
         return <AdminPanel profile={profile} />;
       case 'settings': return (
@@ -289,7 +289,7 @@ export default function App() {
           </Card>
         </div>
       );
-      default: return <Dashboard profile={profile} onNavigate={setCurrentView} />;
+      default: return <Dashboard profile={profile} />;
     }
   };
 
