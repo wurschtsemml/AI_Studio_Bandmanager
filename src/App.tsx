@@ -11,6 +11,8 @@ import CalendarView from './components/CalendarView';
 import Setlist from './components/Setlist';
 import GigPlanner from './components/GigPlanner';
 import AdminPanel from './components/AdminPanel';
+import RehearsalPlanner from './components/RehearsalPlanner';
+import TodoManager from './components/TodoManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,15 +27,17 @@ import {
   Menu,
   X,
   Settings,
-  Lock
+  Lock,
+  ListTodo
 } from 'lucide-react';
 
-type View = 'dashboard' | 'calendar' | 'setlist' | 'gigs' | 'admin' | 'settings';
+type View = 'dashboard' | 'calendar' | 'setlist' | 'gigs' | 'admin' | 'settings' | 'rehearsals' | 'todos';
 
 export default function App() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState<View>('dashboard');
+  const [initialRehearsalDate, setInitialRehearsalDate] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -206,7 +210,7 @@ export default function App() {
                 id="username" 
                 type="text" 
                 placeholder="z.B. max" 
-                value={username}
+                value={username || ''}
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
@@ -217,7 +221,7 @@ export default function App() {
                 id="password" 
                 type="password" 
                 placeholder="••••••••" 
-                value={password}
+                value={password || ''}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
@@ -235,25 +239,60 @@ export default function App() {
     );
   }
 
-  const navItems = [
+  const navGroups = [
     { id: 'dashboard', label: 'Übersicht', icon: LayoutDashboard },
-    { id: 'calendar', label: 'Verfügbarkeit', icon: Calendar },
-    { id: 'setlist', label: 'Setlist', icon: Music },
-    { id: 'gigs', label: 'Gig-Planer', icon: MapPin },
-    { id: 'settings', label: 'Einstellungen', icon: Settings },
-    ...(profile?.role === 'admin' ? [{ id: 'admin', label: 'Admin', icon: Users }] : []),
+    {
+      title: 'Management',
+      items: [
+        { id: 'calendar', label: 'Verfügbarkeit', icon: Calendar },
+        { id: 'rehearsals', label: 'Proben-Planer', icon: Calendar },
+        { id: 'gigs', label: 'Gig-Planer', icon: MapPin },
+      ]
+    },
+    {
+      title: 'Inhalte',
+      items: [
+        { id: 'setlist', label: 'Setlist', icon: Music },
+        { id: 'todos', label: "ToDo's", icon: ListTodo },
+      ]
+    },
+    {
+      title: 'System',
+      items: [
+        ...(profile?.role === 'admin' ? [{ id: 'admin', label: 'Admin', icon: Users }] : []),
+        { id: 'settings', label: 'Einstellungen', icon: Settings },
+      ]
+    }
   ];
 
   const renderView = () => {
     switch (currentView) {
-      case 'dashboard': return <Dashboard profile={profile} />;
+      case 'dashboard': return (
+        <Dashboard 
+          profile={profile} 
+          onPlanRehearsal={(date) => {
+            setInitialRehearsalDate(date);
+            setCurrentView('rehearsals');
+          }} 
+        />
+      );
       case 'calendar': return <CalendarView profile={profile} />;
       case 'setlist': return <Setlist profile={profile} />;
       case 'gigs': return <GigPlanner profile={profile} />;
+      case 'rehearsals': return <RehearsalPlanner profile={profile} initialDate={initialRehearsalDate} />;
+      case 'todos': return <TodoManager profile={profile} />;
       case 'admin': 
         if (profile?.role !== 'admin') {
           setCurrentView('dashboard');
-          return <Dashboard profile={profile} />;
+          return (
+            <Dashboard 
+              profile={profile} 
+              onPlanRehearsal={(date) => {
+                setInitialRehearsalDate(date);
+                setCurrentView('rehearsals');
+              }} 
+            />
+          );
         }
         return <AdminPanel profile={profile} />;
       case 'settings': return (
@@ -278,7 +317,7 @@ export default function App() {
                     id="new-password" 
                     type="password" 
                     placeholder="Mindestens 4 Zeichen" 
-                    value={newPassword}
+                    value={newPassword || ''}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
                   />
@@ -289,7 +328,15 @@ export default function App() {
           </Card>
         </div>
       );
-      default: return <Dashboard profile={profile} />;
+      default: return (
+        <Dashboard 
+          profile={profile} 
+          onPlanRehearsal={(date) => {
+            setInitialRehearsalDate(date);
+            setCurrentView('rehearsals');
+          }} 
+        />
+      );
     }
   };
 
@@ -340,24 +387,51 @@ export default function App() {
             )}
           </div>
 
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setCurrentView(item.id as View);
-                  setIsMenuOpen(false);
-                }}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
-                  ${currentView === item.id 
-                    ? 'bg-primary text-white shadow-md' 
-                    : 'text-gray-600 hover:bg-gray-100'}
-                `}
-              >
-                <item.icon className="h-5 w-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
+          <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
+            {navGroups.map((group) => (
+              <div key={group.title || group.id} className="space-y-1">
+                {group.title && (
+                  <h3 className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                    {group.title}
+                  </h3>
+                )}
+                {group.items ? (
+                  group.items.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setCurrentView(item.id as View);
+                        setIsMenuOpen(false);
+                      }}
+                      className={`
+                        w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all
+                        ${currentView === item.id 
+                          ? 'bg-primary text-white shadow-md' 
+                          : 'text-gray-600 hover:bg-gray-100'}
+                      `}
+                    >
+                      <item.icon className="h-4.5 w-4.5" />
+                      <span className="font-medium">{item.label}</span>
+                    </button>
+                  ))
+                ) : (
+                  <button
+                    onClick={() => {
+                      setCurrentView(group.id as View);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`
+                      w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                      ${currentView === group.id 
+                        ? 'bg-primary text-white shadow-md' 
+                        : 'text-gray-600 hover:bg-gray-100'}
+                    `}
+                  >
+                    <group.icon className="h-5 w-5" />
+                    <span className="font-medium">{group.label}</span>
+                  </button>
+                )}
+              </div>
             ))}
           </nav>
 

@@ -211,7 +211,7 @@ export default function GigPlanner({ profile }: Props) {
               <Input 
                 placeholder="Suchen nach Veranstaltung..." 
                 className="pl-10"
-                value={search}
+                value={search || ''}
                 onChange={e => setSearch(e.target.value)}
               />
             </div>

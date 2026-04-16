@@ -357,7 +357,7 @@ export default function Setlist({ profile }: Props) {
               <Input 
                 placeholder="Suchen nach Titel oder Interpret..." 
                 className="pl-10"
-                value={search}
+                value={search || ''} 
                 onChange={e => setSearch(e.target.value)}
               />
             </div>

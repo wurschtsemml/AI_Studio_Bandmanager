@@ -49,3 +49,24 @@ export interface Gig {
   notes?: string;
   isArchived?: boolean;
 }
+
+export interface Rehearsal {
+  id?: string;
+  date: string;
+  time?: string;
+  location?: string;
+  notes?: string;
+  songIds?: string[];
+  todos?: { id: string; task: string; completed: boolean }[];
+  isArchived?: boolean;
+}
+
+export interface Todo {
+  id?: string;
+  task: string;
+  completed: boolean;
+  category?: 'general' | 'rehearsal';
+  rehearsalId?: string;
+  rehearsalDate?: string;
+  createdAt: string;
+}

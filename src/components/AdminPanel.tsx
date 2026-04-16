@@ -205,11 +205,11 @@ export default function AdminPanel({ profile }: Props) {
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">Name</Label>
-                  <Input id="name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="col-span-3" />
+                  <Input id="name" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="username" className="text-right">Benutzername</Label>
-                  <Input id="username" value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} className="col-span-3" placeholder="z.B. max" disabled={!!editingUser} />
+                  <Input id="username" value={formData.username || ''} onChange={e => setFormData({...formData, username: e.target.value})} className="col-span-3" placeholder="z.B. max" disabled={!!editingUser} />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="pass" className="text-right">
@@ -218,7 +218,7 @@ export default function AdminPanel({ profile }: Props) {
                   <Input 
                     id="pass" 
                     type="password" 
-                    value={password} 
+                    value={password || ''} 
                     onChange={e => setPassword(e.target.value)} 
                     className="col-span-3" 
                     placeholder={editingUser ? 'Leer lassen zum Behalten' : 'Mind. 4 Zeichen'} 
@@ -226,7 +226,7 @@ export default function AdminPanel({ profile }: Props) {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="instrument" className="text-right">Instrument</Label>
-                  <Input id="instrument" value={formData.instrument} onChange={e => setFormData({...formData, instrument: e.target.value})} className="col-span-3" placeholder="z.B. Gitarre, Drums" />
+                  <Input id="instrument" value={formData.instrument || ''} onChange={e => setFormData({...formData, instrument: e.target.value})} className="col-span-3" placeholder="z.B. Gitarre, Drums" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="role" className="text-right">Rolle</Label>
@@ -394,13 +394,12 @@ export default function AdminPanel({ profile }: Props) {
                   <Button 
                     variant="outline" 
                     className="w-full gap-2" 
-                    asChild
+                    nativeButton={false}
+                    render={<Label htmlFor="logo-upload" className="cursor-pointer" />}
                     disabled={isUploadingLogo}
                   >
-                    <Label htmlFor="logo-upload" className="cursor-pointer">
-                      <Upload className="h-4 w-4" />
-                      {isUploadingLogo ? 'Wird gespeichert...' : 'Logo hochladen'}
-                    </Label>
+                    <Upload className="h-4 w-4" />
+                    {isUploadingLogo ? 'Wird gespeichert...' : 'Logo hochladen'}
                   </Button>
                   <p className="text-[10px] text-gray-400 mt-2 text-center">
                     Empfohlen: Transparentes PNG, max. 500KB.

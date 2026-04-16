@@ -3,7 +3,7 @@ import { db, handleFirestoreError, OperationType } from '../firebase';
 import { collection, query, where, onSnapshot, limit, orderBy } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserProfile, Song, Gig } from '../types';
-import { Music, MapPin, Calendar, Star, CheckCircle2, Plus, CalendarPlus, Music2 } from 'lucide-react';
+import { Music, MapPin, Calendar, Star, CheckCircle2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { format, isAfter, startOfToday, parseISO } from 'date-fns';
@@ -11,9 +11,10 @@ import { de } from 'date-fns/locale';
 
 interface Props {
   profile: UserProfile | null;
+  onPlanRehearsal: (date: string) => void;
 }
 
-export default function Dashboard({ profile }: Props) {
+export default function Dashboard({ profile, onPlanRehearsal }: Props) {
   const [recentSongs, setRecentSongs] = useState<Song[]>([]);
   const [upcomingGigs, setUpcomingGigs] = useState<Gig[]>([]);
   const [possibleRehearsals, setPossibleRehearsals] = useState<string[]>([]);
@@ -112,8 +113,14 @@ export default function Dashboard({ profile }: Props) {
                 <p className="text-sm opacity-90 italic">Keine gemeinsamen Termine gefunden.</p>
               ) : (
                 possibleRehearsals.map(date => (
-                  <Badge key={date} variant="secondary" className="bg-white/20 text-white border-none px-3 py-1">
+                  <Badge 
+                    key={date} 
+                    variant="secondary" 
+                    className="bg-white/20 text-white border-none px-3 py-1 cursor-pointer hover:bg-white/30 transition-colors flex items-center gap-2"
+                    onClick={() => onPlanRehearsal(date)}
+                  >
                     {format(parseISO(date), 'eeee, dd.MM.', { locale: de })}
+                    <Plus className="h-3 w-3" />
                   </Badge>
                 ))
               )}
