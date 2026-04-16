@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Einfache Regeln für Band Manager Pro
+    // Da keine sensiblen Daten vorhanden sind, ist der Zugriff öffentlich erlaubt.
+    
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

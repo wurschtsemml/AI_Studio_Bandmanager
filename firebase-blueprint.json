@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A band member or admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "instrument": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Availability": {
+      "title": "Availability",
+      "description": "User availability for a specific date.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "date": { "type": "string", "description": "YYYY-MM-DD" },
+        "status": { "type": "string", "enum": ["neutral", "available", "unavailable"] }
+      },
+      "required": ["userId", "date", "status"]
+    },
+    "Song": {
+      "title": "Song",
+      "description": "A song in the band's repertoire.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "artist": { "type": "string" },
+        "status": { "type": "number", "description": "Grade 1-6" },
+        "notes": { "type": "string" },
+        "youtubeLink": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "isArchived": { "type": "boolean" }
+      },
+      "required": ["title", "artist", "status"]
+    },
+    "Gig": {
+      "title": "Gig",
+      "description": "A performance or potential booking.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "organizer": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "status": { "type": "string", "enum": ["In Anfrage", "Beworben", "Bestätigt", "Abgelehnt"] },
+        "date": { "type": "string" },
+        "isArchived": { "type": "boolean" }
+      },
+      "required": ["name", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and roles."
+    },
+    "/availability/{availabilityId}": {
+      "schema": "Availability",
+      "description": "Global availability records (indexed by userId + date)."
+    },
+    "/songs/{songId}": {
+      "schema": "Song",
+      "description": "Band setlist."
+    },
+    "/gigs/{gigId}": {
+      "schema": "Gig",
+      "description": "Gig planning."
+    }
+  }
+}

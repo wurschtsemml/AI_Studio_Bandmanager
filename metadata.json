@@ -1,0 +1,5 @@
+{
+  "name": "Band Manager Pro",
+  "description": "Eine umfassende Web-App zur Band-Verwaltung mit Verfügbarkeits-Kalender, Setlist-Management und Auftrittsplanung.",
+  "requestFramePermissions": []
+}
