@@ -142,9 +142,12 @@ export default function Dashboard({ profile }: Props) {
                         <p className="font-bold text-sm">{song.title}</p>
                         <p className="text-xs text-gray-500">{song.artist}</p>
                       </div>
-                      <Badge variant="outline" className="bg-white">
-                        Note: {song.status}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge variant="outline" className="bg-white">
+                          Note: {song.status}
+                        </Badge>
+                        <span className="text-[10px] text-gray-400 font-mono">{song.playCount || 0}x gespielt</span>
+                      </div>
                     </div>
                     {song.notes && (
                       <p className="text-xs text-gray-600 bg-white/50 p-2 rounded border border-gray-100 italic">

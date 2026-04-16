@@ -33,7 +33,7 @@ interface Props {
   profile: UserProfile | null;
 }
 
-type SortField = 'title' | 'status' | 'lastPlayed';
+type SortField = 'title' | 'status' | 'lastPlayed' | 'playCount';
 type SortOrder = 'asc' | 'desc';
 
 export default function Setlist({ profile }: Props) {
@@ -55,7 +55,8 @@ export default function Setlist({ profile }: Props) {
     youtubeLink: '',
     fileUrl: '',
     isArchived: false,
-    lastPlayed: ''
+    lastPlayed: '',
+    playCount: 0
   });
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -85,7 +86,7 @@ export default function Setlist({ profile }: Props) {
       }
       setIsAddOpen(false);
       setEditingSong(null);
-      setFormData({ title: '', artist: '', status: 3, notes: '', youtubeLink: '', fileUrl: '', isArchived: false, lastPlayed: '' });
+      setFormData({ title: '', artist: '', status: 3, notes: '', youtubeLink: '', fileUrl: '', isArchived: false, lastPlayed: '', playCount: 0 });
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, 'songs');
     }
@@ -131,6 +132,20 @@ export default function Setlist({ profile }: Props) {
       toast.error('Upload fehlgeschlagen');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const incrementPlayCount = async (song: Song) => {
+    try {
+      const newCount = (song.playCount || 0) + 1;
+      const today = new Date().toISOString().split('T')[0];
+      await updateDoc(doc(db, 'songs', song.id!), { 
+        playCount: newCount,
+        lastPlayed: today
+      });
+      toast.success(`Zähler für "${song.title}" erhöht`);
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, `songs/${song.id}`);
     }
   };
 
@@ -207,6 +222,10 @@ export default function Setlist({ profile }: Props) {
                   <Input id="lastPlayed" type="date" value={formData.lastPlayed || ''} onChange={e => setFormData({...formData, lastPlayed: e.target.value})} className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="playCount" className="text-right">Anzahl gespielt</Label>
+                  <Input id="playCount" type="number" min="0" value={formData.playCount ?? 0} onChange={e => setFormData({...formData, playCount: parseInt(e.target.value)})} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="youtube" className="text-right">YouTube</Label>
                   <Input id="youtube" value={formData.youtubeLink || ''} onChange={e => setFormData({...formData, youtubeLink: e.target.value})} className="col-span-3" placeholder="https://youtube.com/..." />
                 </div>
@@ -240,7 +259,7 @@ export default function Setlist({ profile }: Props) {
               <Button variant="outline" onClick={() => {
                 setIsAddOpen(false);
                 setEditingSong(null);
-                setFormData({ title: '', artist: '', status: 3, notes: '', youtubeLink: '', fileUrl: '', isArchived: false, lastPlayed: '' });
+                setFormData({ title: '', artist: '', status: 3, notes: '', youtubeLink: '', fileUrl: '', isArchived: false, lastPlayed: '', playCount: 0 });
               }}>Abbrechen</Button>
               <Button onClick={handleSave}>Speichern</Button>
             </DialogFooter>
@@ -296,6 +315,12 @@ export default function Setlist({ profile }: Props) {
                       <SortIcon field="lastPlayed" />
                     </div>
                   </TableHead>
+                  <TableHead className="text-center cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('playCount')}>
+                    <div className="flex items-center justify-center">
+                      Gespielt
+                      <SortIcon field="playCount" />
+                    </div>
+                  </TableHead>
                   <TableHead>Links</TableHead>
                   <TableHead>Notizen</TableHead>
                   <TableHead className="text-right">Aktionen</TableHead>
@@ -328,6 +353,20 @@ export default function Setlist({ profile }: Props) {
                         <div className="text-xs flex items-center gap-1 text-gray-600">
                           <CalendarIcon className="h-3 w-3" />
                           {song.lastPlayed ? format(parseISO(song.lastPlayed), 'dd.MM.yyyy') : '-'}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="font-mono font-bold">{song.playCount || 0}x</span>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-6 w-6 rounded-full" 
+                            onClick={() => incrementPlayCount(song)}
+                            title="Zähler erhöhen & Datum auf heute setzen"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
                         </div>
                       </TableCell>
                       <TableCell>

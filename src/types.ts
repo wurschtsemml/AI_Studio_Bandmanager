@@ -28,6 +28,7 @@ export interface Song {
   fileUrl?: string;
   isArchived?: boolean;
   lastPlayed?: string; // YYYY-MM-DD
+  playCount?: number;
 }
 
 export type GigStatus = 'In Anfrage' | 'Beworben' | 'Bestätigt' | 'Abgelehnt';
