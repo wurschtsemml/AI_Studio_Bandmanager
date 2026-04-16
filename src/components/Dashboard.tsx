@@ -91,12 +91,12 @@ export default function Dashboard({ profile }: Props) {
         {/* Quick Stats */}
         <Card className="bg-indigo-600 text-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Deine Rolle</CardTitle>
+            <CardTitle className="text-sm font-medium">Dein Instrument</CardTitle>
             <Star className="h-4 w-4 opacity-70" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold capitalize">{profile?.role}</div>
-            <p className="text-xs opacity-70">Berechtigungsstufe</p>
+            <div className="text-2xl font-bold capitalize">{profile?.instrument || 'Nicht angegeben'}</div>
+            <p className="text-xs opacity-70">In deinem Profil hinterlegt</p>
           </CardContent>
         </Card>
 
