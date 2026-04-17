@@ -7,6 +7,7 @@ export interface UserProfile {
   name: string;
   role: UserRole;
   instrument?: string;
+  lastLogin?: string; // ISO String
 }
 
 export type AvailabilityStatus = 'neutral' | 'available' | 'unavailable';

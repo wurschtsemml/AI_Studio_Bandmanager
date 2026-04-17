@@ -30,8 +30,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BandSettings, UserProfile, UserRole } from '../types';
-import { Shield, Trash2, UserCog, Mail, ShieldCheck, Plus, UserPlus, Image as ImageIcon, Upload } from 'lucide-react';
+import { Shield, Trash2, UserCog, Mail, ShieldCheck, Plus, UserPlus, Image as ImageIcon, Upload, Clock } from 'lucide-react';
 import { toast } from 'sonner';
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 interface Props {
   profile: UserProfile | null;
@@ -275,6 +277,7 @@ export default function AdminPanel({ profile }: Props) {
                       <TableHead>Mitglied</TableHead>
                       <TableHead>Instrument</TableHead>
                       <TableHead>Rolle</TableHead>
+                      <TableHead>Letzter Login</TableHead>
                       <TableHead className="text-right">Aktionen</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -312,6 +315,18 @@ export default function AdminPanel({ profile }: Props) {
                               'User'
                             )}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            {u.lastLogin ? (
+                              <>
+                                <Clock className="h-3 w-3" />
+                                {format(new Date(u.lastLogin), 'dd.MM.yyyy HH:mm', { locale: de })}
+                              </>
+                            ) : (
+                              <span className="italic opacity-50">Nie angemeldet</span>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">

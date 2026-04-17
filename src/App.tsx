@@ -100,7 +100,13 @@ export default function App() {
           const docRef = doc(db, 'users', parsed.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            setProfile(docSnap.data() as UserProfile);
+            const userData = docSnap.data() as UserProfile;
+            setProfile(userData);
+            // Update last login even for session restore to keep it fresh
+            await setDoc(doc(db, 'users', userData.uid), {
+              ...userData,
+              lastLogin: new Date().toISOString()
+            });
           } else {
             localStorage.removeItem('band_manager_user');
           }
@@ -142,7 +148,12 @@ export default function App() {
       const userData = userDoc.data() as UserProfile;
 
       if (userData.password === trimmedPassword) {
-        setProfile(userData);
+        const updatedProfile = {
+          ...userData,
+          lastLogin: new Date().toISOString()
+        };
+        await setDoc(doc(db, 'users', userData.uid), updatedProfile);
+        setProfile(updatedProfile);
         localStorage.setItem('band_manager_user', JSON.stringify({ uid: userData.uid }));
         toast.success('Erfolgreich angemeldet');
       } else {
